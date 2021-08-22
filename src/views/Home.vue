@@ -37,6 +37,7 @@
 import { defineComponent, ref, Ref } from "vue"
 import { useRouter } from "vue-router"
 import api from "@/api"
+import axios from '@/api/axios'
 import { FormType } from "@/api/form"
 import { FormOutlined, DeleteOutlined } from "@ant-design/icons-vue"
 export default defineComponent({
@@ -73,6 +74,7 @@ export default defineComponent({
         projectList.value = res
       })
     }
+    axios.get('/api/system/user/info')
     getList()
     return { projectList, toAdd, toDesign }
   }
