@@ -40,6 +40,8 @@ import api from "@/api"
 import axios from '@/api/axios'
 import { FormType } from "@/api/form"
 import { FormOutlined, DeleteOutlined } from "@ant-design/icons-vue"
+import ModalDialog from '@/components/ModalDialog'
+
 export default defineComponent({
   name: "Home",
   components: { FormOutlined, DeleteOutlined },
@@ -74,7 +76,6 @@ export default defineComponent({
         projectList.value = res
       })
     }
-    axios.get('/api/system/user/info')
     getList()
     return { projectList, toAdd, toDesign }
   }

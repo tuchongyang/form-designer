@@ -20,7 +20,7 @@ interface HeaderType {
 export interface FormProps {
   currentModuleId: string
   moduleList: ModuleType[]
-  header: HeaderType
+  header: HeaderType | null
 }
 interface Preload {
   module: ModuleType
@@ -73,6 +73,10 @@ const editorModule: Module<FormProps, GlobalDataProps> = {
     },
     setCurrent: (state: FormProps, id: string) => {
       state.currentModuleId = id
+    },
+    setHeader: (state: FormProps, id: HeaderType | null) => {
+      state.header = id
+      console.log('header',state.header)
     }
   },
   actions: {},
@@ -81,7 +85,7 @@ const editorModule: Module<FormProps, GlobalDataProps> = {
       return state.moduleList.find((module) => module.id === state.currentModuleId)
     },
     getCurrentHeader: (state) => {
-      return state.moduleList.find((module) => module.id === state.currentModuleId)
+      return state.header
     }
   }
 }

@@ -1,11 +1,11 @@
 <template>
-  <div class="panel-right" :class="{ active: currentModule }">
+  <div class="panel-right" :class="{ active: currentModule||currentHeader }">
     <ModuleEdit v-if="currentModule" />
-    <HeaderEdit />
+    <HeaderEdit v-if="currentHeader" />
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue"
+import { defineComponent, computed,watch } from "vue"
 import { useStore } from "vuex"
 import { GlobalDataProps } from "@/store"
 import ModuleEdit from "./ModuleEdit.vue"
@@ -18,6 +18,10 @@ export default defineComponent({
     const currentModuleId = computed(() => store.state.form.currentModuleId)
     const currentModule = computed(() => store.getters.getCurrentModule)
     const currentHeader = computed(() => store.getters.getCurrentHeader)
+    watch(currentHeader,(val,val1)=>{
+      console.log(val,val1,'=====watch')
+    })
+    console.log('currentHeader',currentHeader)
     return {
       currentModuleId,
       currentModule,
