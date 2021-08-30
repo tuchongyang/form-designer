@@ -1,19 +1,19 @@
 <template>
-  <div class="panel-module" v-if="currentModule">
+  <div class="panel-module" v-if="currentHeader">
     <div class="head">
-      <div class="title">组件设置</div>
+      <div class="title">头部设置</div>
     </div>
     <div class="form">
       <div class="form-item">
         <div class="label">标题</div>
         <div class="det">
-          <a-input v-model:value="currentModule.label" />
+          <a-input v-model:value="currentHeader.title" />
         </div>
       </div>
       <div class="form-item">
         <div class="label">描述</div>
         <div class="det">
-          <a-input v-model:value="currentModule.desc" />
+          <a-input v-model:value="currentHeader.desc" />
         </div>
       </div>
     </div>
@@ -28,11 +28,9 @@ export default defineComponent({
   components: {},
   setup() {
     const store = useStore<GlobalDataProps>()
-    const currentModuleId = computed(() => store.state.form.currentModuleId)
-    const currentModule = computed(() => store.getters.getCurrentModule)
+    const currentHeader = computed(() => store.getters.getCurrentHeader)
     return {
-      currentModuleId,
-      currentModule
+      currentHeader
     }
   }
 })

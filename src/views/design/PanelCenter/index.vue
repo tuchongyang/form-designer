@@ -1,9 +1,9 @@
 <template>
   <div class="panel-center" @click="centerClick" :style="content.skin.containerStyle">
     <div class="wrapper">
-      <div class="head" :style="content.skin.headerStyle">
-        <div class="title">我的表单</div>
-        <div class="desc">这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述</div>
+      <div class="head" :style="content.skin.headerStyle" @click.stop="setHeader">
+        <div class="title">{{content.header.title}}</div>
+        <div class="desc">{{content.header.desc}}</div>
       </div>
       <div class="content">
         <div class="form">
@@ -50,7 +50,7 @@ const PropsType = {
 export default defineComponent({
   components: { ItemInput, ItemRadio, ItemCheckbox, ItemSelect, ItemControl },
   props: PropsType,
-  setup() {
+  setup(props) {
     const store = useStore()
     const modules = computed(() => store.state.form.moduleList)
     const componentMap = ref({
@@ -59,13 +59,20 @@ export default defineComponent({
       checkbox: "item-checkbox",
       select: "item-select"
     })
+    const currentHeader = computed(() => store.getters.getCurrentHeader)
     const centerClick = () => {
+      store.commit("setHeader",null)
       store.commit("setCurrent", "")
+    }
+    const setHeader = ()=>{
+      store.commit("setHeader", props.content.header)
     }
     return {
       modules,
       componentMap,
-      centerClick
+      currentHeader,
+      centerClick,
+      setHeader
     }
   }
 })

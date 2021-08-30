@@ -24,6 +24,10 @@ export default defineComponent({
       skin: {
         containerStyle: {},
         headerStyle: {}
+      },
+      header:{
+        title: "我的表单",
+        desc:""
       }
     })
     // api.form.list().then((res) => {})

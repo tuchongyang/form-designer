@@ -37,8 +37,11 @@
 import { defineComponent, ref, Ref } from "vue"
 import { useRouter } from "vue-router"
 import api from "@/api"
+import axios from '@/api/axios'
 import { FormType } from "@/api/form"
 import { FormOutlined, DeleteOutlined } from "@ant-design/icons-vue"
+import ModalDialog from '@/components/ModalDialog'
+
 export default defineComponent({
   name: "Home",
   components: { FormOutlined, DeleteOutlined },
