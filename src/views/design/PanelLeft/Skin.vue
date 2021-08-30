@@ -11,21 +11,38 @@
     </div>
   </div>
 </template>
-<script>
-import { defineComponent, ref } from "vue"
+<script lang="ts">
+import { defineComponent, ref, Ref } from "vue"
 // import { PicCenterOutlined, UnorderedListOutlined, DownSquareOutlined, CalendarOutlined, FieldBinaryOutlined } from "@ant-design/icons-vue"
+interface ModuleItemType {
+  name: string
+  position: string
+  skin: {
+    containerStyle: {
+      [key: string]: string | number
+    }
+    headerStyle: {
+      [key: string]: string | number
+    }
+  }
+}
+interface ModuleType {
+  name: string
+  children: Array<ModuleItemType>
+}
+const PropType = {
+  content: {
+    type: Object,
+    default() {
+      return {}
+    }
+  }
+}
 export default defineComponent({
   components: {},
-  props: {
-    content: {
-      type: Object,
-      default() {
-        return {}
-      }
-    }
-  },
+  props: PropType,
   setup(props) {
-    const modules = ref([
+    const sourceDatas: ModuleType[] = [
       {
         name: "纯色",
         children: [
@@ -43,8 +60,9 @@ export default defineComponent({
           { name: "蓝墨茶-深", position: "-210px -550px", skin: { containerStyle: { backgroundColor: "#090909" }, headerStyle: { background: "#393e46", color: "#fff", borderBottom: "5px solid #000000" } } }
         ]
       }
-    ])
-    const select = (data) => {
+    ]
+    const modules: Ref<ModuleType[]> = ref(sourceDatas)
+    const select = (data: ModuleItemType) => {
       const content = props.content
       content.skin = data.skin
       console.log("content", content)

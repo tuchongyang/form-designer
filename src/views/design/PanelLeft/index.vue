@@ -17,10 +17,10 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent, ref } from "vue"
-import Modules from "./Modules"
-import Skin from "./Skin"
+import Modules from "./Modules.vue"
+import Skin from "./Skin.vue"
 import { AppstoreOutlined, FileTextOutlined } from "@ant-design/icons-vue"
 const PropsType = {
   content: {

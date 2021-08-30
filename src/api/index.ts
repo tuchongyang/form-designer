@@ -1,9 +1,9 @@
-import form, { FormApiType } from "./form"
-export interface ApiType {
-  form: FormApiType
-}
-const Api: ApiType = {
-  form: form
+import form from "./form"
+import system from './system'
+
+const Api = {
+  form: form,
+  system
 }
 
 export default Api

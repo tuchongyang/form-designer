@@ -11,11 +11,11 @@
     <PanelRight />
   </div>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent, ref } from "vue"
-import PanelLeft from "./PanelLeft"
-import PanelCenter from "./PanelCenter"
-import PanelRight from "./PanelRight"
+import PanelLeft from "./PanelLeft/index.vue"
+import PanelCenter from "./PanelCenter/index.vue"
+import PanelRight from "./PanelRight/index.vue"
 // import api from "@/api"
 export default defineComponent({
   components: { PanelLeft, PanelCenter, PanelRight },
