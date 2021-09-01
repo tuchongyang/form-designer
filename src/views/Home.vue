@@ -1,11 +1,6 @@
 <template>
   <div class="container">
-    <div class="header">
-      <div class="logo">
-        <img src="../assets/images/logo.png" />
-      </div>
-      <div class="title">表单设计器</div>
-    </div>
+    <HeaderBar />
     <div class="content">
       <div class="filter-head">
         <div class="btn btn-primary" @click="toAdd">+ 新建表单</div>
@@ -18,52 +13,55 @@
           <div class="img">
             <img class="empimg" src="../assets/images/empty.png" />
             <div class="btn-group">
-              <div class="btn-edit" @click.stop="edit(item)"><FormOutlined /></div>
+              <div class="btn-edit" @click.stop="toAdd(item)"><FormOutlined /></div>
               <div class="btn-remove" @click.stop="remove(item)"><DeleteOutlined /></div>
             </div>
           </div>
           <div class="det">
             <div class="name">{{ item.title }}</div>
-            <div class="time">{{ item.createTime }}</div>
+            <div class="time">{{ item.createdAt }}</div>
           </div>
         </div>
       </div>
       <empty v-if="projectList.length <= 0"></empty>
     </div>
+    <AddForm ref="addForm" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from "vue"
+import { defineComponent, ref, Ref, createVNode } from "vue"
 import { useRouter } from "vue-router"
 import api from "@/api"
-import axios from '@/api/axios'
-import { FormType } from "@/api/form"
+// import axios from "@/api/axios"
+import { FormListItem } from "@/api/form"
 import { FormOutlined, DeleteOutlined } from "@ant-design/icons-vue"
-import ModalDialog from '@/components/ModalDialog'
-
+// import ModalDialog from "@/components/ModalDialog"
+import HeaderBar from "@/components/HeaderBar/index.vue"
+import AddForm from "./AddForm.vue"
+import { Modal, message } from "ant-design-vue"
+import { ExclamationCircleOutlined } from "@ant-design/icons-vue"
 export default defineComponent({
   name: "Home",
-  components: { FormOutlined, DeleteOutlined },
+  components: { FormOutlined, DeleteOutlined, HeaderBar, AddForm },
   setup() {
-    const projectList: Ref<FormType[]> = ref([])
+    const projectList: Ref<FormListItem[]> = ref([])
     const router = useRouter()
-    const toAdd = () => {
-      api.form
-        .save({
-          title: "我的表单",
-          desc: ""
-        })
-        .then((res) => {
-          router.push({
-            path: "/design",
-            query: {
-              id: res.id
-            }
-          })
-        })
+    const addForm: Ref<typeof AddForm | null> = ref(null)
+    const getList = () => {
+      api.form.list().then((res) => {
+        projectList.value = res.result.rows
+      })
     }
-    const toDesign = (data: FormType): void => {
+    const toAdd = (data: FormListItem) => {
+      addForm?.value?.open({
+        data,
+        success: () => {
+          getList()
+        }
+      })
+    }
+    const toDesign = (data: FormListItem): void => {
       router.push({
         path: "/design",
         query: {
@@ -71,41 +69,27 @@ export default defineComponent({
         }
       })
     }
-    const getList = () => {
-      api.form.list().then((res) => {
-        projectList.value = res
+    const remove = (data: FormListItem) => {
+      Modal.confirm({
+        title: "确定删除表单[" + data.title + "]吗？",
+        icon: createVNode(ExclamationCircleOutlined),
+        onOk() {
+          api.form.remove(data.id).then(() => {
+            message.success("删除成功")
+            getList()
+          })
+        },
+        onCancel() {
+          console.log("Cancel")
+        }
       })
     }
     getList()
-    return { projectList, toAdd, toDesign }
+    return { projectList, toAdd, toDesign, addForm, remove }
   }
 })
 </script>
 <style scoped lang="scss">
-.header {
-  background: #fff;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-  height: 50px;
-  padding: 0 15px;
-  .logo {
-    margin: 7px;
-    background: rgba(229, 229, 229, 1);
-    border-radius: 12px;
-    display: inline-block;
-    line-height: 1;
-    vertical-align: middle;
-    img {
-      height: 36px;
-      vertical-align: top;
-    }
-  }
-  .title {
-    display: inline-block;
-    font-size: 18px;
-    font-weight: bold;
-    vertical-align: middle;
-  }
-}
 .container {
   background: #f1f5f1;
   padding-bottom: 10px;

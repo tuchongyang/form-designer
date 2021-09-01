@@ -18,7 +18,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue"
-import useLoginHook from "./useLoginHook"
+import { useLoginHook } from "./useLoginHook"
 export default defineComponent({
   setup() {
     const { form, rules, onSubmit, loading } = useLoginHook()

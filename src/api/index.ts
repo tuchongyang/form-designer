@@ -1,8 +1,8 @@
 import form from "./form"
-import system from './system'
+import system from "./system"
 
 const Api = {
-  form: form,
+  form,
   system
 }
 

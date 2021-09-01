@@ -1,6 +1,6 @@
 import { Module } from "vuex"
 import { GlobalDataProps } from "./index"
-import api from '@/api'
+import api from "@/api"
 export interface UserType {
   [key: string]: any
   id?: string
@@ -13,7 +13,7 @@ export interface UserType {
 export interface UserProps {
   user: UserType
 }
-let userInfoStr = localStorage.getItem("userInfo")
+const userInfoStr = localStorage.getItem("userInfo")
 let userInfo
 if (userInfoStr) {
   userInfo = JSON.parse(localStorage.getItem("userInfo") || "")
@@ -27,18 +27,21 @@ const editorModule: Module<UserProps, GlobalDataProps> = {
   mutations: {
     setUser: (state, preload: UserType) => {
       state.user = preload
-      localStorage.setItem('userInfo', JSON.stringify(preload))
+      localStorage.setItem("userInfo", JSON.stringify(preload))
     }
   },
   actions: {
     getUserInfo({ commit }) {
       return new Promise<void>((resolve, reject) => {
-        api.system.user.info().then(res => {
-          commit('setUser', res.result)
-          resolve()
-        }).catch(() => {
-          reject()
-        })
+        api.system.user
+          .info()
+          .then((res) => {
+            commit("setUser", res.result)
+            resolve()
+          })
+          .catch(() => {
+            reject()
+          })
       })
     }
   },

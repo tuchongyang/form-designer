@@ -1,20 +1,25 @@
-import { AxiosRequestConfig } from 'axios'
-import { message } from 'ant-design-vue'
-import service from './axios'
+import { AxiosRequestConfig } from "axios"
+import { message } from "ant-design-vue"
+import service from "./axios"
 
-interface BaseResponse<T> {
+export interface BaseResponse<T> {
   status: number
   result: T
   message?: string
 }
+export interface ListPageType<T> {
+  rows: Array<T>
+  count: number
+}
+export type ResponseType<T> = Promise<BaseResponse<T>>
 
 const request = <T>(config: AxiosRequestConfig): Promise<BaseResponse<T>> => {
   return new Promise((resolve, reject) => {
     service.request<BaseResponse<T>>(config).then(
-      res => {
+      (res) => {
         resolve(res.data)
       },
-      err => {
+      (err) => {
         switch (err?.code) {
           case 401:
             // token失效

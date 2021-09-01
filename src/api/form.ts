@@ -1,76 +1,53 @@
-import { ModuleType } from "@/store/form"
-import * as Utils from "@/utils"
+import request, { BaseResponse, ListPageType } from "@/api/request"
 
-export interface FormApiType {
-  list: () => Promise<FormType[]>
-  detail: (id: string) => Promise<FormType | undefined>
-  save: (form: FormSaveOrUpdateType) => Promise<FormType>
-  update: (form: FormType) => Promise<void>
+
+export interface FormListItem {
+  "id": number
+  "title": string,
+  "desc": string,
+  "status": number,
+  "content": string,
+  "viewCount": number,
+  "cover": string,
+  "creator": number,
+  "createdAt": string,
+  "updatedAt": string
 }
-export interface FormType {
-  id: string
-  title: string
-  desc: string
-  createTime: number
-  updateTime: number
-  modules: Array<ModuleType>
+
+export function save(opt: UpdateParams): Promise<BaseResponse<undefined>> {
+  return request<undefined>({
+    url: "/form/save",
+    method: "post",
+    data: opt
+  })
 }
-interface FormSaveOrUpdateType {
-  id?: string
-  title: string
-  desc: string
-  createTime?: number
-  updateTime?: number
-  modules?: Array<ModuleType>
+
+export interface UpdateParams {
+  id?: number
+  title: string,
+  desc?: string,
+  content?: string,
+  cover?: string
 }
-const getFormList = (): FormType[] => {
-  let list: FormType[] = []
-  const formList = localStorage.getItem("formList")
-  if (formList) {
-    list = JSON.parse(formList)
-  }
-  return list
+export function update(opt: UpdateParams): Promise<BaseResponse<undefined>> {
+  const { id, ...params } = opt
+  return request<undefined>({
+    url: "/form/update/" + opt.id,
+    method: "post",
+    data: params
+  })
 }
-const formApi: FormApiType = {
-  list() {
-    const list = getFormList()
-    return Promise.resolve(list)
-  },
-  detail(id: string): Promise<FormType | undefined> {
-    return new Promise<FormType>((resolve: (key: FormType) => void, reject) => {
-      const list = getFormList()
-      const result = list.find((a) => a.id == id)
-      if (result) {
-        resolve(result)
-      } else {
-        reject()
-      }
-    })
-  },
-  save(form) {
-    const list = getFormList()
-    const { title, desc } = form
-    const opt: FormType = {
-      title,
-      desc,
-      id: Utils.uniqueId(6),
-      createTime: Date.now(),
-      updateTime: Date.now(),
-      modules: []
-    }
-    list.unshift(opt)
-    localStorage.setItem("formList", JSON.stringify(list))
-    return Promise.resolve(opt)
-  },
-  update(form) {
-    const list = getFormList()
-    for (const i in list) {
-      if (list[i].id == form.id) {
-        list[i] = form
-      }
-    }
-    localStorage.setItem("formList", JSON.stringify(list))
-    return Promise.resolve()
-  }
+export function list(): Promise<BaseResponse<ListPageType<FormListItem>>> {
+  return request<ListPageType<FormListItem>>({
+    url: "/form/list",
+    method: "get"
+  })
 }
-export default formApi
+
+export function remove(id: number): Promise<BaseResponse<number>> {
+  return request<number>({
+    url: "/form/" + id,
+    method: "delete"
+  })
+}
+export default { save, list, update, remove }

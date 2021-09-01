@@ -1,12 +1,18 @@
 <template>
-  <router-view />
+  <ConfigProvider :locale="locale">
+    <router-view />
+  </ConfigProvider>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue"
-
+import zhCN from "ant-design-vue/es/locale/zh_CN"
+import { ConfigProvider } from "ant-design-vue"
 export default defineComponent({
-  setup() {
-    return {}
+  components: { ConfigProvider },
+  data() {
+    return {
+      local: zhCN
+    }
   }
 })
 </script>

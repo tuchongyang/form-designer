@@ -2,7 +2,7 @@ import { Module } from "vuex"
 import { GlobalDataProps } from "./index"
 import { SelectTypes } from "ant-design-vue/es/select"
 export interface ModuleType {
-  [key: string]: any
+  [key: string]: string | boolean | SelectTypes["options"] | Array<string>
   id: string
   label: string
   type: string
@@ -29,7 +29,7 @@ interface Preload {
 type UpdatePropType = {
   id: string
   key: string
-  value: any
+  value: string
 }
 const editorModule: Module<FormProps, GlobalDataProps> = {
   state: {
@@ -76,7 +76,7 @@ const editorModule: Module<FormProps, GlobalDataProps> = {
     },
     setHeader: (state: FormProps, id: HeaderType | null) => {
       state.header = id
-      console.log('header',state.header)
+      console.log("header", state.header)
     }
   },
   actions: {},

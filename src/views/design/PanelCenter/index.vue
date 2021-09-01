@@ -2,8 +2,8 @@
   <div class="panel-center" @click="centerClick" :style="content.skin.containerStyle">
     <div class="wrapper">
       <div class="head" :style="content.skin.headerStyle" @click.stop="setHeader">
-        <div class="title">{{content.header.title}}</div>
-        <div class="desc">{{content.header.desc}}</div>
+        <div class="title">{{ content.header.title }}</div>
+        <div class="desc">{{ content.header.desc }}</div>
       </div>
       <div class="content">
         <div class="form">
@@ -61,10 +61,10 @@ export default defineComponent({
     })
     const currentHeader = computed(() => store.getters.getCurrentHeader)
     const centerClick = () => {
-      store.commit("setHeader",null)
+      store.commit("setHeader", null)
       store.commit("setCurrent", "")
     }
-    const setHeader = ()=>{
+    const setHeader = () => {
       store.commit("setHeader", props.content.header)
     }
     return {
