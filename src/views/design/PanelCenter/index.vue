@@ -2,8 +2,8 @@
   <div class="panel-center" @click="centerClick" :style="content.skin.containerStyle">
     <div class="wrapper">
       <div class="head" :style="content.skin.headerStyle" @click.stop="setHeader">
-        <div class="title">{{ content.header.title }}</div>
-        <div class="desc">{{ content.header.desc }}</div>
+        <div class="title">{{ detail.title }}</div>
+        <div class="desc">{{ detail.desc }}</div>
       </div>
       <div class="content">
         <div class="form">
@@ -33,14 +33,21 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue"
 // import * as Utils from "@/utils"
-import { useStore } from "vuex"
+import { useStore, Store } from "vuex"
 import ItemControl from "./ItemControl.vue"
 import ItemInput from "./ItemInput.vue"
 import ItemRadio from "./ItemRadio.vue"
 import ItemCheckbox from "./ItemCheckbox.vue"
 import ItemSelect from "./ItemSelect.vue"
+import { GlobalDataProps } from "@/store"
 const PropsType = {
   content: {
+    type: Object,
+    default() {
+      return {}
+    }
+  },
+  detail: {
     type: Object,
     default() {
       return {}
@@ -51,8 +58,8 @@ export default defineComponent({
   components: { ItemInput, ItemRadio, ItemCheckbox, ItemSelect, ItemControl },
   props: PropsType,
   setup(props) {
-    const store = useStore()
-    const modules = computed(() => store.state.form.moduleList)
+    const store: Store<GlobalDataProps> = useStore()
+    const modules = computed(() => store.getters.getModuleList)
     const componentMap = ref({
       input: "item-input",
       radio: "item-radio",

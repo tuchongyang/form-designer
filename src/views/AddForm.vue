@@ -19,7 +19,7 @@ import api from "@/api"
 
 interface OpenOptType {
   data: FormListItem | undefined
-  success: () => void
+  success?: () => void
 }
 
 export default defineComponent({
@@ -29,11 +29,11 @@ export default defineComponent({
     const formRef = ref()
     const form: Ref<UpdateParams> = ref({
       title: "",
-      desc: ""
+      desc: "",
+      content: ""
     })
     let options: OpenOptType = {
-      data: undefined,
-      success: () => {}
+      data: undefined
     }
     const open = (opt: OpenOptType) => {
       options = opt

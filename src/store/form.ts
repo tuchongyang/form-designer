@@ -1,6 +1,15 @@
 import { Module } from "vuex"
 import { GlobalDataProps } from "./index"
 import { SelectTypes } from "ant-design-vue/es/select"
+//整个编辑过程存储的那个表单对象
+export interface FormDetailType {
+  id: number
+  title: string
+  desc: string
+  cover: string
+  content: ContentType
+}
+//每个表单项的类型
 export interface ModuleType {
   [key: string]: string | boolean | SelectTypes["options"] | Array<string>
   id: string
@@ -12,6 +21,17 @@ export interface ModuleType {
   options?: SelectTypes["options"]
   defaultValue?: string | Array<string>
 }
+export interface ContentType {
+  skin: {
+    containerStyle: StyleType
+    headerStyle: StyleType
+  }
+  modules: Array<ModuleType>
+}
+interface StyleType {
+  [key: string]: string | number
+}
+
 interface HeaderType {
   title?: string
   desc?: string
@@ -19,8 +39,7 @@ interface HeaderType {
 }
 export interface FormProps {
   currentModuleId: string
-  moduleList: ModuleType[]
-  header: HeaderType | null
+  form: FormDetailType
 }
 interface Preload {
   module: ModuleType
@@ -33,40 +52,40 @@ type UpdatePropType = {
 }
 const editorModule: Module<FormProps, GlobalDataProps> = {
   state: {
-    moduleList: [],
-    currentModuleId: "",
-    header: {}
+    form: {} as FormDetailType,
+    currentModuleId: ""
   },
   mutations: {
     moduleAdd: (state: FormProps, preload: Preload) => {
-      state.moduleList.splice(preload.index, 0, preload.module)
+      console.log("state.form.content.modules", state.form)
+      state.form.content.modules.splice(preload.index, 0, preload.module)
     },
     moduleRemove: (state: FormProps, id: string) => {
-      const index = state.moduleList.findIndex((a) => a.id == id)
+      const index = state.form.content.modules.findIndex((a) => a.id == id)
       if (index > -1) {
-        state.moduleList.splice(index, 1)
+        state.form.content.modules.splice(index, 1)
       }
     },
     moduleUp: (state: FormProps, id: string) => {
-      const currentIndex = state.moduleList.findIndex((a) => a.id == id)
+      const currentIndex = state.form.content.modules.findIndex((a) => a.id == id)
       if (currentIndex > 0) {
         const changeIndex: number = currentIndex - 1
-        const current = state.moduleList[currentIndex]
-        state.moduleList[currentIndex] = state.moduleList[changeIndex]
-        state.moduleList[changeIndex] = current
+        const current = state.form.content.modules[currentIndex]
+        state.form.content.modules[currentIndex] = state.form.content.modules[changeIndex]
+        state.form.content.modules[changeIndex] = current
       }
     },
     moduleDown: (state: FormProps, id: string) => {
-      const currentIndex = state.moduleList.findIndex((a) => a.id == id)
-      if (currentIndex < state.moduleList.length - 1) {
+      const currentIndex = state.form.content.modules.findIndex((a) => a.id == id)
+      if (currentIndex < state.form.content.modules.length - 1) {
         const changeIndex: number = currentIndex + 1
-        const current = state.moduleList[currentIndex]
-        state.moduleList[currentIndex] = state.moduleList[changeIndex]
-        state.moduleList[changeIndex] = current
+        const current = state.form.content.modules[currentIndex]
+        state.form.content.modules[currentIndex] = state.form.content.modules[changeIndex]
+        state.form.content.modules[changeIndex] = current
       }
     },
     moduleUpdate: (state: FormProps, { id, key, value }: UpdatePropType) => {
-      const current: ModuleType | undefined = state.moduleList.find((a) => a.id == id)
+      const current: ModuleType | undefined = state.form.content.modules.find((a) => a.id == id)
       if (current) {
         current[key] = value
       }
@@ -74,18 +93,18 @@ const editorModule: Module<FormProps, GlobalDataProps> = {
     setCurrent: (state: FormProps, id: string) => {
       state.currentModuleId = id
     },
-    setHeader: (state: FormProps, id: HeaderType | null) => {
-      state.header = id
-      console.log("header", state.header)
+    setForm: (state: FormProps, preload: FormDetailType) => {
+      state.form = preload
     }
   },
   actions: {},
   getters: {
     getCurrentModule: (state) => {
-      return state.moduleList.find((module) => module.id === state.currentModuleId)
+      const modules = state.form.content?.modules || []
+      return modules.find((module) => module.id === state.currentModuleId)
     },
-    getCurrentHeader: (state) => {
-      return state.header
+    getModuleList: (state) => {
+      return state.form?.content?.modules || []
     }
   }
 }

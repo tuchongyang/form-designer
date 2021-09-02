@@ -21,7 +21,6 @@ export default defineComponent({
     watch(currentHeader, (val, val1) => {
       console.log(val, val1, "=====watch")
     })
-    console.log("currentHeader", currentHeader)
     return {
       currentModuleId,
       currentModule,

@@ -1,17 +1,17 @@
 import request, { BaseResponse, ListPageType } from "@/api/request"
-
+import { ContentType } from "@/store/form"
 
 export interface FormListItem {
-  "id": number
-  "title": string,
-  "desc": string,
-  "status": number,
-  "content": string,
-  "viewCount": number,
-  "cover": string,
-  "creator": number,
-  "createdAt": string,
-  "updatedAt": string
+  id: number
+  title: string
+  desc: string
+  status: number
+  content: string
+  viewCount: number
+  cover: string
+  creator: number
+  createdAt: string
+  updatedAt: string
 }
 
 export function save(opt: UpdateParams): Promise<BaseResponse<undefined>> {
@@ -24,9 +24,9 @@ export function save(opt: UpdateParams): Promise<BaseResponse<undefined>> {
 
 export interface UpdateParams {
   id?: number
-  title: string,
-  desc?: string,
-  content?: string,
+  title: string
+  desc?: string
+  content: string
   cover?: string
 }
 export function update(opt: UpdateParams): Promise<BaseResponse<undefined>> {
@@ -44,10 +44,16 @@ export function list(): Promise<BaseResponse<ListPageType<FormListItem>>> {
   })
 }
 
-export function remove(id: number): Promise<BaseResponse<number>> {
-  return request<number>({
+export function remove(id: number): Promise<BaseResponse<undefined>> {
+  return request<undefined>({
     url: "/form/" + id,
     method: "delete"
   })
 }
-export default { save, list, update, remove }
+export function detail(id: number): Promise<BaseResponse<FormListItem>> {
+  return request<FormListItem>({
+    url: "/form/" + id,
+    method: "get"
+  })
+}
+export default { save, list, update, remove, detail }

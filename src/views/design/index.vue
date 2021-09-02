@@ -1,38 +1,31 @@
 <template>
   <div class="design-container">
-    <div class="header">
-      <div class="logo">
-        <img src="../../assets/images/logo.png" />
-      </div>
-      <div class="title">表单设计器</div>
-    </div>
+    <PanelHeader :detail="detail" />
     <PanelLeft :content="content" />
-    <PanelCenter :content="content" />
+    <PanelCenter :content="content" :detail="detail" />
     <PanelRight />
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue"
+import PanelHeader from "./PanelHeader/index.vue"
 import PanelLeft from "./PanelLeft/index.vue"
 import PanelCenter from "./PanelCenter/index.vue"
 import PanelRight from "./PanelRight/index.vue"
-// import api from "@/api"
+import { useDetailHook } from "./useDetailHook"
 export default defineComponent({
-  components: { PanelLeft, PanelCenter, PanelRight },
+  components: { PanelHeader, PanelLeft, PanelCenter, PanelRight },
   setup() {
     const content = ref({
       skin: {
         containerStyle: {},
         headerStyle: {}
-      },
-      header: {
-        title: "我的表单",
-        desc: ""
       }
     })
-    // api.form.list().then((res) => {})
+    const { detail } = useDetailHook()
     return {
-      content
+      content,
+      detail
     }
   }
 })
@@ -41,34 +34,5 @@ export default defineComponent({
 <style scoped lang="scss">
 .design-container {
   min-height: 100vh;
-}
-.header {
-  background: #fff;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-  height: 50px;
-  padding: 0 15px;
-  z-index: 50;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  .logo {
-    margin: 7px;
-    background: rgba(229, 229, 229, 1);
-    border-radius: 12px;
-    display: inline-block;
-    line-height: 1;
-    vertical-align: middle;
-    img {
-      height: 36px;
-      vertical-align: top;
-    }
-  }
-  .title {
-    display: inline-block;
-    font-size: 18px;
-    font-weight: bold;
-    vertical-align: middle;
-  }
 }
 </style>

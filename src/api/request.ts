@@ -26,7 +26,7 @@ const request = <T>(config: AxiosRequestConfig): Promise<BaseResponse<T>> => {
 
             break
           default:
-            message.error(err.message || "服务器连接失败")
+            message.error(err?.message || "服务器连接失败")
             break
         }
         reject(err)

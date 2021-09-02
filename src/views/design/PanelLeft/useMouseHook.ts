@@ -108,7 +108,7 @@ function _onMouseup() {
   }
 
   if (dragEvent.moduleIndex <= -1) {
-    const moduleList = store.state.form.moduleList
+    const moduleList = store.state.form.form.content.modules
     dragEvent.moduleIndex = moduleList.length
   }
   startAdd()
