@@ -20,10 +20,12 @@ interface UseLoginHook {
   loading: Ref<boolean>
   onSubmit: () => void
   rules: Ref<Rules>
+  formRef: Ref<undefined>
 }
 export const useLoginHook = (): UseLoginHook => {
   const router = useRouter()
   const store = useStore()
+  const formRef = ref()
   const form = ref({
     name: "",
     password: ""
@@ -35,18 +37,23 @@ export const useLoginHook = (): UseLoginHook => {
   const loading = ref(false)
 
   const onSubmit = (): void => {
-    api.system.user.login(form.value).then((res) => {
-      message.success("登录成功")
-      localStorage.setItem("token", res.result)
-      store.dispatch("getUserInfo").then(() => {
-        router.push("/")
+    formRef.value.validate()
+    .then(() => {
+      api.system.user.login(form.value).then((res) => {
+        message.success("登录成功")
+        localStorage.setItem("token", res.result)
+        store.dispatch("getUserInfo").then(() => {
+          router.push("/")
+        })
       })
-    })
+    }).catch(()=>{})
+    
   }
   return {
     form,
     rules,
     onSubmit,
-    loading
+    loading,
+    formRef
   }
 }

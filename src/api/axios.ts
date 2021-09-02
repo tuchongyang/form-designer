@@ -65,13 +65,6 @@ instance.interceptors.response.use(
     removePending(response.config)
 
     const errorCode = response?.data?.status
-    switch (errorCode) {
-      case "401":
-        // 根据errorCode，对业务做异常处理(和后端约定)
-        break
-      default:
-        break
-    }
     if (errorCode !== 200) {
       message.error(response?.data?.message || "请求失败，请重试")
       return Promise.reject()

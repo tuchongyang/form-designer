@@ -1,0 +1,154 @@
+<template>
+  <div class="panel-center" :style="detail?.content.skin.containerStyle">
+    <div class="wrapper">
+      <div class="head" :style="detail?.content.skin.headerStyle" @click.stop="setHeader">
+        <div class="title">{{ detail?.title }}</div>
+        <div class="desc">{{ detail?.desc }}</div>
+      </div>
+      <div class="content">
+        <div class="form">
+          <div class="form-item" v-for="(item, i) in modules" :key="i">
+            <div class="title">
+              <div class="tit">{{ item.label }}<span style="color: red" v-if="item.required">*</span></div>
+              <div class="txt">{{ item.desc }}</div>
+            </div>
+            <div class="det">
+              <div class="component">
+                <component :is="componentMap[item.type]" :data="item" v-model="form[item.id]" />
+              </div>
+            </div>
+          </div>
+          <div class="btn-area">
+            <a-button type="primary" size="large" @click="save">提 交</a-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script lang="ts">
+import { defineComponent, ref, Ref, computed } from "vue"
+// import * as Utils from "@/utils"
+import { useStore, Store } from "vuex"
+import ItemInput from "./ItemInput.vue"
+import ItemRadio from "./ItemRadio.vue"
+import ItemCheckbox from "./ItemCheckbox.vue"
+import ItemSelect from "./ItemSelect.vue"
+import { GlobalDataProps } from "@/store"
+import api from "@/api"
+import { useRoute } from "vue-router"
+import { FormDetailType, ContentType } from "@/store/form"
+interface FormType{
+  [key: string]: string
+}
+export default defineComponent({
+  components: { ItemInput, ItemRadio, ItemCheckbox, ItemSelect },
+  setup() {
+    const route = useRoute()
+    const store: Store<GlobalDataProps> = useStore()
+    const componentMap = ref({
+      input: "item-input",
+      radio: "item-radio",
+      checkbox: "item-checkbox",
+      select: "item-select"
+    })
+    const detail: Ref<FormDetailType | null> = ref(null)
+    const modules = computed(() => detail.value?.content?.modules || [])
+    const form: Ref<FormType> = ref({})
+    const getData = () => {
+      const id = route.query.id || 0
+      api.form.detail(+id).then((res) => {
+        let content: ContentType | null
+        try {
+          content = JSON.parse(res.result.content)
+        } catch (e) {
+          content = null
+        }
+        if (content === null) {
+          content = {
+            skin: {
+              containerStyle: {},
+              headerStyle: {}
+            },
+            modules: []
+          }
+        }
+        detail.value = { ...res.result, content }
+
+        for(let i in content.modules){
+          const module = content.modules[i]
+          form.value[module.id] = ""
+        }
+      })
+    }
+    getData()
+    const save = ()=>{
+      console.log('form',form.value)
+    }
+    
+    return {
+      detail,
+      modules,
+      componentMap,
+      form,
+      save
+    }
+  }
+})
+</script>
+
+<style scoped lang="scss">
+.panel-center {
+  min-height: calc(100vh);
+  background: #f1f5f1;
+  padding: 20px 0;
+  .wrapper {
+    background: rgba(255, 255, 255, 0.9);
+    min-height: calc(100vh - 70px);
+    width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.05);
+    .head {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+      .title {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+      .desc {
+        margin-top: 10px;
+      }
+    }
+    .content {
+      .form {
+        .form-item {
+          padding: 12px 30px;
+          .title {
+            margin-bottom: 10px;
+            .txt {
+              color: #999;
+            }
+          }
+          .det {
+            padding-left: 10px;
+            .component {
+              width: 80%;
+            }
+          }
+          .empty {
+            text-align: center;
+            padding: 30px 0;
+            color: #999;
+          }
+        }
+      }
+    }
+  }
+}
+.btn-area{
+  padding: 30px 0;
+  text-align: center;
+}
+</style>

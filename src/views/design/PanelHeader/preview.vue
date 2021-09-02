@@ -1,5 +1,5 @@
 <template>
-  <a-modal title="添加表单" v-model:visible="visible" :confirm-loading="confirmLoading" @ok="handleOk" cancelText="取消" okText="确定">
+  <a-modal title="预览" v-model:visible="visible" :confirm-loading="confirmLoading" @ok="handleOk" cancelText="取消" okText="确定" width="100%" wrapClassName="full-modal">
     <a-form ref="formRef" :model="form" :rules="rules" :labelCol="labelCol">
       <a-form-item label="标题" name="title">
         <a-input v-model:value="form.title" />
@@ -36,7 +36,7 @@ export default defineComponent({
       data: undefined
     }
     const open = (opt: OpenOptType) => {
-      options = opt
+      options = opt || {}
       if (options.data) {
         form.value.title = options.data.title
         form.value.desc = options.data.desc

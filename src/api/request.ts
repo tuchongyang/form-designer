@@ -20,15 +20,7 @@ const request = <T>(config: AxiosRequestConfig): Promise<BaseResponse<T>> => {
         resolve(res.data)
       },
       (err) => {
-        switch (err?.code) {
-          case 401:
-            // token失效
-
-            break
-          default:
-            message.error(err?.message || "服务器连接失败")
-            break
-        }
+        
         reject(err)
       }
     )

@@ -5,6 +5,12 @@
     </div>
     <div class="title">表单设计器</div>
     <div class="control">
+      <a-button shape="round" @click="preview">
+        <template #icon>
+          <DownloadOutlined />
+        </template>
+        预览
+      </a-button>
       <a-button shape="round" @click="save">
         <template #icon>
           <DownloadOutlined />
@@ -19,12 +25,14 @@
       </a-button>
     </div>
   </div>
+  <Preview ref="previewRef" />
 </template>
 <script lang="ts">
-import { defineComponent, PropType, watch } from "vue"
+import { defineComponent, ref, PropType, watch } from "vue"
 import { SendOutlined } from "@ant-design/icons-vue"
 import { useSaveHook } from "./useSaveHook"
 import { FormDetailType } from "@/store/form"
+import Preview from './preview.vue'
 const Props = {
   detail: {
     type: Object as PropType<FormDetailType>,
@@ -34,7 +42,7 @@ const Props = {
   }
 }
 export default defineComponent({
-  components: { SendOutlined },
+  components: { SendOutlined, Preview },
   props: Props,
   setup(props) {
     const saveData = { detail: props.detail }
@@ -46,7 +54,11 @@ export default defineComponent({
         saveData.detail = val
       }
     )
-    return { save }
+    const previewRef = ref()
+    const preview = ()=>{
+      previewRef?.value.open()
+    }
+    return { save,preview,previewRef }
   }
 })
 </script>

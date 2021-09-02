@@ -2,7 +2,7 @@
   <div class="container">
     <div class="login-form">
       <h3 class="title">登录</h3>
-      <a-form :model="form" :rules="rules">
+      <a-form ref="formRef" :model="form" :rules="rules">
         <a-form-item label="账号" name="name">
           <a-input v-model:value="form.name" placeholder="用户名/邮箱/手机" :disabled="loading" />
         </a-form-item>
@@ -21,8 +21,8 @@ import { defineComponent } from "vue"
 import { useLoginHook } from "./useLoginHook"
 export default defineComponent({
   setup() {
-    const { form, rules, onSubmit, loading } = useLoginHook()
-    return { form, rules, onSubmit, loading }
+    const { form, rules, onSubmit, loading, formRef } = useLoginHook()
+    return { form, rules, onSubmit, loading, formRef }
   }
 })
 </script>
