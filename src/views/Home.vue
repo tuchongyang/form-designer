@@ -13,9 +13,11 @@
           <div class="img">
             <img class="empimg" src="../assets/images/empty.png" />
             <div class="btn-group">
-              <div class="btn-edit" @click.stop="toAdd(item)"><FormOutlined /></div>
-              <div class="btn-remove" @click.stop="remove(item)"><DeleteOutlined /></div>
+              <div class="btn btn-preview" @click.stop="toShow(item)"><EyeOutlined /></div>
+              <div class="btn btn-edit" @click.stop="toAdd(item)"><FormOutlined /></div>
+              <div class="btn btn-remove" @click.stop="remove(item)"><DeleteOutlined /></div>
             </div>
+            <div class="status" v-html="getStatus(item)"></div>
           </div>
           <div class="det">
             <div class="name">{{ item.title }}</div>
@@ -23,7 +25,9 @@
           </div>
         </div>
       </div>
-      <empty v-if="projectList.length <= 0"></empty>
+      <loading :loading="loading" />
+      <empty v-if="!loading && projectList.length <= 0"></empty>
+      <a-pagination v-model:current="listQuery.page" :total="total" @change="loadData" style="text-align: center" />
     </div>
     <AddForm ref="addForm" />
   </div>
@@ -40,24 +44,22 @@ import { FormOutlined, DeleteOutlined } from "@ant-design/icons-vue"
 import HeaderBar from "@/components/HeaderBar/index.vue"
 import AddForm from "./AddForm.vue"
 import { Modal, message } from "ant-design-vue"
-import { ExclamationCircleOutlined } from "@ant-design/icons-vue"
+import { ExclamationCircleOutlined, EyeOutlined } from "@ant-design/icons-vue"
+import { useLoadHook } from "@/hooks/useLoadHook"
 export default defineComponent({
   name: "Home",
-  components: { FormOutlined, DeleteOutlined, HeaderBar, AddForm },
+  components: { FormOutlined, DeleteOutlined, EyeOutlined, HeaderBar, AddForm },
   setup() {
-    const projectList: Ref<FormListItem[]> = ref([])
+    // const projectList: Ref<FormListItem[]> = ref([])
     const router = useRouter()
     const addForm: Ref<typeof AddForm | null> = ref(null)
-    const getList = () => {
-      api.form.list().then((res) => {
-        projectList.value = res.result.rows
-      })
-    }
+    const { total, loading, list: projectList, listQuery, loadData } = useLoadHook<FormListItem>({ api: api.form.list })
+    loadData()
     const toAdd = (data: FormListItem) => {
       addForm?.value?.open({
         data,
         success: () => {
-          getList()
+          loadData()
         }
       })
     }
@@ -69,6 +71,15 @@ export default defineComponent({
         }
       })
     }
+    const toShow = (data: FormListItem): void => {
+      const loca = router.resolve({
+        path: "/show",
+        query: {
+          id: data.id
+        }
+      })
+      window.open(loca.href, "_blank")
+    }
     const remove = (data: FormListItem) => {
       Modal.confirm({
         title: "确定删除表单[" + data.title + "]吗？",
@@ -76,7 +87,7 @@ export default defineComponent({
         onOk() {
           api.form.remove(data.id).then(() => {
             message.success("删除成功")
-            getList()
+            loadData()
           })
         },
         onCancel() {
@@ -84,8 +95,16 @@ export default defineComponent({
         }
       })
     }
-    getList()
-    return { projectList, toAdd, toDesign, addForm, remove }
+    const map = [
+      { value: 1, label: "待发布", color: "#2a82e4" },
+      { value: 2, label: "已发布", color: "#4caf50" },
+      { value: 3, label: "有修改", color: "#ff9600" }
+    ]
+    const getStatus = (data: FormListItem) => {
+      const cur = map.find((a) => a.value == data.status)
+      return (cur && `<span style="background-color: ${cur.color};">${cur.label}</span>`) || data.status
+    }
+    return { projectList, toAdd, toDesign, toShow, addForm, remove, getStatus, listQuery, loading, total, loadData }
   }
 })
 </script>
@@ -128,7 +147,7 @@ export default defineComponent({
     .project-list {
       overflow: hidden;
       .item {
-        width: 170px;
+        width: 220px;
         margin: 0 30px 30px 0;
         border-radius: 10px;
         border: 1px solid #eee;
@@ -142,7 +161,7 @@ export default defineComponent({
           }
         }
         .img {
-          height: 150px;
+          height: 220px;
           position: relative;
           .empimg {
             width: 80px;
@@ -158,39 +177,51 @@ export default defineComponent({
             top: 0;
             display: none;
           }
-          .btn-edit {
+          .btn {
             width: 30px;
             height: 30px;
             line-height: 30px;
-            background: #3f9dff;
             color: #fff;
-            border-radius: 0 0 0 10px;
             text-align: center;
             cursor: pointer;
             display: inline-block;
             &:hover {
               opacity: 0.7;
             }
+            &:first-child {
+              border-radius: 0 0 0 10px;
+            }
+            &:last-child {
+              border-radius: 0 10px 0 0;
+            }
+          }
+          .btn-preview {
+            background: #9c27b0;
+          }
+          .btn-edit {
+            background: #3f9dff;
           }
           .btn-remove {
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
             background: #ff7585;
-            color: #fff;
-            border-radius: 0 10px 0 0;
-            text-align: center;
-            cursor: pointer;
-            display: inline-block;
-            &:hover {
-              opacity: 0.7;
+          }
+          .status {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 12px;
+            :deep(span) {
+              background: #999;
+              color: #fff;
+              padding: 2px 8px;
+              border-radius: 0 0 5px 5px;
+              display: block;
             }
           }
         }
         .det {
           background: rgba(250, 250, 250, 1);
           padding: 10px;
-          border-radius: 10px;
+          border-radius: 0 0 10px 10px;
           .name {
             white-space: nowrap;
             text-overflow: ellipsis;

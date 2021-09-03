@@ -1,90 +1,44 @@
 <template>
-  <a-modal title="预览" v-model:visible="visible" :confirm-loading="confirmLoading" @ok="handleOk" cancelText="取消" okText="确定" width="100%" wrapClassName="full-modal">
-    <a-form ref="formRef" :model="form" :rules="rules" :labelCol="labelCol">
-      <a-form-item label="标题" name="title">
-        <a-input v-model:value="form.title" />
-      </a-form-item>
-      <a-form-item label="简介" name="desc">
-        <a-input v-model:value="form.desc" />
-      </a-form-item>
-    </a-form>
+  <a-modal title="预览" v-model:visible="visible" :confirm-loading="confirmLoading" :footer="null" width="100%" wrapClassName="full-modal">
+    <Show mode="preview" v-if="visible" />
   </a-modal>
 </template>
 <script lang="ts">
 import { defineComponent, Ref, ref } from "vue"
-import { message } from "ant-design-vue"
-import { ValidateErrorEntity } from "ant-design-vue/es/form/interface"
-import { FormListItem, UpdateParams } from "@/api/form"
-import api from "@/api"
-
-interface OpenOptType {
-  data: FormListItem | undefined
-  success?: () => void
-}
+import Show from "../../show/index.vue"
 
 export default defineComponent({
+  components: { Show },
   setup() {
-    const confirmLoading: Ref<boolean> = ref(false)
     const visible: Ref<boolean> = ref(false)
-    const formRef = ref()
-    const form: Ref<UpdateParams> = ref({
-      title: "",
-      desc: "",
-      content: ""
-    })
-    let options: OpenOptType = {
-      data: undefined
-    }
-    const open = (opt: OpenOptType) => {
-      options = opt || {}
-      if (options.data) {
-        form.value.title = options.data.title
-        form.value.desc = options.data.desc
-        form.value.id = options.data.id
-      } else {
-        form.value.title = ""
-        form.value.desc = ""
-      }
+    const open = () => {
       visible.value = true
     }
-    const rules = ref({
-      title: [{ required: true, message: "请输入标题", trigger: "blur" }]
-    })
-    const save = () => {
-      if (form.value.id) {
-        api.form.update(form.value).then(() => {
-          message.success("保存成功")
-          visible.value = false
-          options.success && options.success()
-        })
-      } else {
-        api.form.save(form.value).then(() => {
-          message.success("保存成功")
-          visible.value = false
-          options.success && options.success()
-        })
-      }
-    }
-    const handleOk = () => {
-      formRef.value
-        .validate()
-        .then(() => {
-          save()
-        })
-        .catch((error: ValidateErrorEntity<UpdateParams>) => {
-          console.log("error", error)
-        })
-    }
     return {
-      confirmLoading,
       visible,
       open,
-      form,
-      formRef,
-      rules,
-      handleOk,
       labelCol: { span: 4 }
     }
   }
 })
 </script>
+<style lang="scss">
+.full-modal {
+  .ant-modal {
+    max-width: 100%;
+    top: 0;
+    padding-bottom: 0;
+    margin: 0;
+  }
+  .ant-modal-content {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh);
+  }
+  .ant-modal-body {
+    flex: 1;
+    overflow: auto;
+    padding: 0;
+  }
+}
+</style>

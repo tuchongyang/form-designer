@@ -1,13 +1,13 @@
 <template>
   <div class="design-container">
     <PanelHeader :detail="detail" />
-    <PanelLeft :content="content" />
+    <PanelLeft :content="detail?.content" />
     <PanelCenter :content="content" :detail="detail" />
     <PanelRight />
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue"
+import { defineComponent } from "vue"
 import PanelHeader from "./PanelHeader/index.vue"
 import PanelLeft from "./PanelLeft/index.vue"
 import PanelCenter from "./PanelCenter/index.vue"
@@ -16,15 +16,8 @@ import { useDetailHook } from "./useDetailHook"
 export default defineComponent({
   components: { PanelHeader, PanelLeft, PanelCenter, PanelRight },
   setup() {
-    const content = ref({
-      skin: {
-        containerStyle: {},
-        headerStyle: {}
-      }
-    })
     const { detail } = useDetailHook()
     return {
-      content,
       detail
     }
   }

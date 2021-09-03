@@ -1,7 +1,7 @@
 <template>
-  <div class="panel-center" @click="centerClick" :style="content.skin.containerStyle">
+  <div class="panel-center" @click="centerClick" :style="detail?.content?.skin?.containerStyle">
     <div class="wrapper">
-      <div class="head" :style="content.skin.headerStyle" @click.stop="setHeader">
+      <div class="head" :style="detail?.content?.skin?.headerStyle" @click.stop="setHeader">
         <div class="title">{{ detail.title }}</div>
         <div class="desc">{{ detail.desc }}</div>
       </div>

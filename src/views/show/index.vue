@@ -18,7 +18,8 @@
               </div>
             </div>
           </div>
-          <div class="btn-area">
+          <loading msg="正在努力加载中，请稍后" :loading="loading" />
+          <div class="btn-area" v-if="!loading">
             <a-button type="primary" size="large" @click="save">提 交</a-button>
           </div>
         </div>
@@ -38,12 +39,19 @@ import { GlobalDataProps } from "@/store"
 import api from "@/api"
 import { useRoute } from "vue-router"
 import { FormDetailType, ContentType } from "@/store/form"
-interface FormType{
-  [key: string]: string
+import { message } from "ant-design-vue"
+interface FormType {
+  [key: string]: string | string[]
 }
 export default defineComponent({
   components: { ItemInput, ItemRadio, ItemCheckbox, ItemSelect },
-  setup() {
+  props: {
+    mode: {
+      type: String,
+      default: ""
+    }
+  },
+  setup(props) {
     const route = useRoute()
     const store: Store<GlobalDataProps> = useStore()
     const componentMap = ref({
@@ -55,43 +63,56 @@ export default defineComponent({
     const detail: Ref<FormDetailType | null> = ref(null)
     const modules = computed(() => detail.value?.content?.modules || [])
     const form: Ref<FormType> = ref({})
+    const loading = ref(false)
     const getData = () => {
       const id = route.query.id || 0
-      api.form.detail(+id).then((res) => {
-        let content: ContentType | null
-        try {
-          content = JSON.parse(res.result.content)
-        } catch (e) {
-          content = null
-        }
-        if (content === null) {
-          content = {
-            skin: {
-              containerStyle: {},
-              headerStyle: {}
-            },
-            modules: []
+      loading.value = true
+      api.form
+        .detail(+id)
+        .then((res) => {
+          let content: ContentType | null
+          try {
+            content = JSON.parse(res.result.content)
+          } catch (e) {
+            content = null
           }
-        }
-        detail.value = { ...res.result, content }
+          if (content === null) {
+            content = {
+              skin: {
+                containerStyle: {},
+                headerStyle: {}
+              },
+              modules: []
+            }
+          }
+          detail.value = { ...res.result, content }
 
-        for(let i in content.modules){
-          const module = content.modules[i]
-          form.value[module.id] = ""
-        }
-      })
+          for (let i in content.modules) {
+            const module = content.modules[i]
+            form.value[module.id] = module.defaultValue || ""
+          }
+          console.log("form", form.value)
+        })
+        .finally(() => {
+          loading.value = false
+        })
     }
     getData()
-    const save = ()=>{
-      console.log('form',form.value)
+    const save = () => {
+      if (props.mode == "preview") {
+        message.info("当前处于预览模式，无法提交")
+        return
+      }
+      console.log("form", form.value)
     }
-    
+
     return {
       detail,
       modules,
       componentMap,
       form,
-      save
+      save,
+      loading
     }
   }
 })
@@ -147,7 +168,7 @@ export default defineComponent({
     }
   }
 }
-.btn-area{
+.btn-area {
   padding: 30px 0;
   text-align: center;
 }

@@ -14,6 +14,7 @@ export interface FormListItem {
   updatedAt: string
 }
 
+//保存
 export function save(opt: UpdateParams): Promise<BaseResponse<undefined>> {
   return request<undefined>({
     url: "/form/save",
@@ -21,7 +22,7 @@ export function save(opt: UpdateParams): Promise<BaseResponse<undefined>> {
     data: opt
   })
 }
-
+//修改
 export interface UpdateParams {
   id?: number
   title: string
@@ -37,23 +38,37 @@ export function update(opt: UpdateParams): Promise<BaseResponse<undefined>> {
     data: params
   })
 }
-export function list(): Promise<BaseResponse<ListPageType<FormListItem>>> {
+//列表
+export interface ListQueryType {
+  page: number
+  pageSize: number
+}
+export function list(params?: ListQueryType): Promise<BaseResponse<ListPageType<FormListItem>>> {
   return request<ListPageType<FormListItem>>({
     url: "/form/list",
-    method: "get"
+    method: "get",
+    params
   })
 }
-
+//删除
 export function remove(id: number): Promise<BaseResponse<undefined>> {
   return request<undefined>({
     url: "/form/" + id,
     method: "delete"
   })
 }
+//详情
 export function detail(id: number): Promise<BaseResponse<FormListItem>> {
   return request<FormListItem>({
     url: "/form/" + id,
     method: "get"
   })
 }
-export default { save, list, update, remove, detail }
+//发布
+export function publish(id: number): Promise<BaseResponse<undefined>> {
+  return request<undefined>({
+    url: "/form/publish/" + id,
+    method: "post"
+  })
+}
+export default { save, list, update, remove, detail, publish }

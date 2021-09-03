@@ -1,9 +1,9 @@
 <template>
   <div class="header">
     <div class="logo">
-      <img src="../../../assets/images/logo.png" />
+      <router-link to="/"><img src="../../../assets/images/logo.png" /></router-link>
     </div>
-    <div class="title">表单设计器</div>
+    <div class="title"><router-link to="/">表单设计器</router-link></div>
     <div class="control">
       <a-button shape="round" @click="preview">
         <template #icon>
@@ -17,7 +17,7 @@
         </template>
         保存
       </a-button>
-      <a-button type="primary" shape="round">
+      <a-button type="primary" shape="round" @click="publish">
         <template #icon>
           <SendOutlined />
         </template>
@@ -32,7 +32,7 @@ import { defineComponent, ref, PropType, watch } from "vue"
 import { SendOutlined } from "@ant-design/icons-vue"
 import { useSaveHook } from "./useSaveHook"
 import { FormDetailType } from "@/store/form"
-import Preview from './preview.vue'
+import Preview from "./preview.vue"
 const Props = {
   detail: {
     type: Object as PropType<FormDetailType>,
@@ -46,19 +46,15 @@ export default defineComponent({
   props: Props,
   setup(props) {
     const saveData = { detail: props.detail }
-    const { save } = useSaveHook(saveData)
-    console.log("props", props)
+    const { save, publish, preview, loading, previewRef } = useSaveHook(saveData)
     watch(
       () => props.detail,
       (val) => {
         saveData.detail = val
       }
     )
-    const previewRef = ref()
-    const preview = ()=>{
-      previewRef?.value.open()
-    }
-    return { save,preview,previewRef }
+
+    return { save, preview, previewRef, publish, loading }
   }
 })
 </script>
@@ -85,11 +81,13 @@ export default defineComponent({
       vertical-align: top;
     }
   }
-  .title {
+  .title,
+  .title a {
     display: inline-block;
     font-size: 18px;
     font-weight: bold;
     vertical-align: middle;
+    color: #222;
   }
   .control {
     float: right;

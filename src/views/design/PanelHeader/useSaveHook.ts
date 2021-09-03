@@ -1,3 +1,4 @@
+import { ref } from "vue"
 import { FormDetailType } from "@/store/form"
 import * as Utils from "@/utils"
 import api from "@/api"
@@ -7,6 +8,7 @@ interface SavePrams {
   detail: FormDetailType
 }
 export function useSaveHook(saveParams: SavePrams) {
+  const loading = ref(false)
   const save = () => {
     const detail = saveParams.detail
     console.log("detail", detail)
@@ -19,11 +21,35 @@ export function useSaveHook(saveParams: SavePrams) {
       content: content,
       cover: postData.cover
     }
-    console.log("saveData", saveData)
-    api.form.update(saveData).then(() => {
-      message.success("保存成功")
-    })
+    loading.value = true
+    api.form
+      .update(saveData)
+      .then(() => {
+        message.success("保存成功")
+      })
+      .finally(() => {
+        loading.value = false
+      })
     return detail
   }
-  return { save }
+
+  const publish = () => {
+    const detail = saveParams.detail
+    loading.value = true
+    api.form
+      .publish(detail.id)
+      .then(() => {
+        message.success("发布成功")
+      })
+      .finally(() => {
+        loading.value = false
+      })
+  }
+
+  const previewRef = ref()
+  const preview = () => {
+    previewRef?.value.open()
+  }
+
+  return { save, publish, loading, previewRef, preview }
 }

@@ -1,2 +1,3 @@
 import Empty from "./Empty.vue"
-export default [Empty]
+import Loading from "./Loading.vue"
+export default [Empty, Loading]
