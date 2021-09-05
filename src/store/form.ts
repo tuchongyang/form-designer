@@ -103,7 +103,7 @@ const editorModule: Module<FormProps, GlobalDataProps> = {
       const modules = state.form.content?.modules || []
       return modules.find((module) => module.id === state.currentModuleId)
     },
-    getModuleList: (state) => {
+    getModuleList: (state): Array<ModuleType> => {
       return state.form?.content?.modules || []
     }
   }

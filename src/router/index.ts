@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import NProgress from "nprogress" // progress bar
 import "nprogress/nprogress.css" // progress bar style
 import Home from "../views/Home.vue"
+import store from "@/store"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../views/show/index.vue")
   },
   {
+    path: "/detail",
+    name: "Detail",
+    component: () => import("../views/detail/index.vue")
+  },
+  {
     path: "/login",
     name: "Login",
     component: () => import("../views/public/Login.vue")
@@ -32,7 +38,21 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  next()
+  const whiteList = ["/show"]
+  if (whiteList.indexOf(to.path) > -1) {
+    next()
+  } else {
+    store
+      .dispatch("getUserInfo")
+      .then(() => {
+        next()
+      })
+      .catch(() => {
+        next({
+          path: "/login"
+        })
+      })
+  }
 })
 router.afterEach(() => {
   NProgress.done()

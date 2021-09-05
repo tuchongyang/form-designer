@@ -28,6 +28,10 @@ const editorModule: Module<UserProps, GlobalDataProps> = {
     setUser: (state, preload: UserType) => {
       state.user = preload
       localStorage.setItem("userInfo", JSON.stringify(preload))
+    },
+    clearUser: (state) => {
+      state.user = {}
+      localStorage.removeItem("userInfo")
     }
   },
   actions: {
@@ -37,6 +41,19 @@ const editorModule: Module<UserProps, GlobalDataProps> = {
           .info()
           .then((res) => {
             commit("setUser", res.result)
+            resolve()
+          })
+          .catch(() => {
+            reject()
+          })
+      })
+    },
+    logout({ commit }) {
+      return new Promise<void>((resolve, reject) => {
+        api.system.user
+          .logout()
+          .then(() => {
+            commit("clearUser")
             resolve()
           })
           .catch(() => {

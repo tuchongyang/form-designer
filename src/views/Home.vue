@@ -13,9 +13,26 @@
           <div class="img">
             <img class="empimg" src="../assets/images/empty.png" />
             <div class="btn-group">
-              <div class="btn btn-preview" @click.stop="toShow(item)"><EyeOutlined /></div>
-              <div class="btn btn-edit" @click.stop="toAdd(item)"><FormOutlined /></div>
-              <div class="btn btn-remove" @click.stop="remove(item)"><DeleteOutlined /></div>
+              <a-tooltip title="预览">
+                <div class="btn btn-preview" @click.stop="toShow(item)">
+                  <EyeOutlined />
+                </div>
+              </a-tooltip>
+              <a-tooltip title="编辑">
+                <div class="btn btn-edit" @click.stop="toAdd(item)">
+                  <FormOutlined />
+                </div>
+              </a-tooltip>
+              <a-tooltip title="反馈详情">
+                <div class="btn btn-detail" @click.stop="toDetail(item)">
+                  <FileDoneOutlined />
+                </div>
+              </a-tooltip>
+              <a-tooltip title="删除">
+                <div class="btn btn-remove" @click.stop="remove(item)">
+                  <DeleteOutlined />
+                </div>
+              </a-tooltip>
             </div>
             <div class="status" v-html="getStatus(item)"></div>
           </div>
@@ -44,11 +61,11 @@ import { FormOutlined, DeleteOutlined } from "@ant-design/icons-vue"
 import HeaderBar from "@/components/HeaderBar/index.vue"
 import AddForm from "./AddForm.vue"
 import { Modal, message } from "ant-design-vue"
-import { ExclamationCircleOutlined, EyeOutlined } from "@ant-design/icons-vue"
+import { ExclamationCircleOutlined, EyeOutlined, FileDoneOutlined } from "@ant-design/icons-vue"
 import { useLoadHook } from "@/hooks/useLoadHook"
 export default defineComponent({
   name: "Home",
-  components: { FormOutlined, DeleteOutlined, EyeOutlined, HeaderBar, AddForm },
+  components: { FormOutlined, DeleteOutlined, EyeOutlined, FileDoneOutlined, HeaderBar, AddForm },
   setup() {
     // const projectList: Ref<FormListItem[]> = ref([])
     const router = useRouter()
@@ -80,6 +97,15 @@ export default defineComponent({
       })
       window.open(loca.href, "_blank")
     }
+    const toDetail = (data: FormListItem): void => {
+      const loca = router.resolve({
+        path: "/detail",
+        query: {
+          id: data.id
+        }
+      })
+      window.open(loca.href, "_blank")
+    }
     const remove = (data: FormListItem) => {
       Modal.confirm({
         title: "确定删除表单[" + data.title + "]吗？",
@@ -104,7 +130,7 @@ export default defineComponent({
       const cur = map.find((a) => a.value == data.status)
       return (cur && `<span style="background-color: ${cur.color};">${cur.label}</span>`) || data.status
     }
-    return { projectList, toAdd, toDesign, toShow, addForm, remove, getStatus, listQuery, loading, total, loadData }
+    return { projectList, toAdd, toDesign, toShow, addForm, remove, getStatus, listQuery, loading, total, loadData, toDetail }
   }
 })
 </script>
@@ -203,6 +229,9 @@ export default defineComponent({
           }
           .btn-remove {
             background: #ff7585;
+          }
+          .btn-detail {
+            background: #12b25c;
           }
           .status {
             position: absolute;

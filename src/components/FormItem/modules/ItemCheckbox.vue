@@ -1,10 +1,10 @@
 <template>
-  <a-checkbox-group v-model:value="defaultValue">
+  <a-checkbox-group v-model:value="model">
     <a-checkbox :style="radioStyle" :value="item.value" v-for="(item, i) in data.options" :key="i">{{ item.label }}</a-checkbox>
   </a-checkbox-group>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive, computed, PropType } from "vue"
+import { defineComponent, ref,watch, reactive, PropType } from "vue"
 
 import { ModuleType } from "@/store/form"
 const PropsType = {
@@ -13,12 +13,16 @@ const PropsType = {
     default() {
       return {}
     }
+  },
+  modelValue:{
+    type: Array as PropType<Array<string>>,
+    default: []
   }
 }
 export default defineComponent({
   name: "ItemInput",
   props: PropsType,
-  setup(props) {
+  setup(props,context) {
     const value = ref<Array<number>>([])
     const radioStyle = reactive({
       display: "block",
@@ -26,11 +30,17 @@ export default defineComponent({
       lineHeight: "30px",
       marginLeft: 0
     })
-    const defaultValue = computed(() => props.data.defaultValue)
+    const model = ref(props.modelValue)
+    watch(model, (val)=>{
+      context.emit('update:modelValue',val)
+    })
+    watch(()=>props.modelValue,function(val){
+      model.value = props.modelValue
+    })
     return {
       value,
       radioStyle,
-      defaultValue
+      model
     }
   }
 })

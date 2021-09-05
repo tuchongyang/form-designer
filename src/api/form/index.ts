@@ -7,6 +7,7 @@ export interface FormListItem {
   desc: string
   status: number
   content: string
+  publishContent?: string
   viewCount: number
   cover: string
   creator: number
@@ -71,4 +72,6 @@ export function publish(id: number): Promise<BaseResponse<undefined>> {
     method: "post"
   })
 }
-export default { save, list, update, remove, detail, publish }
+
+import answer from './answer'
+export default { save, list, update, remove, detail, publish,answer }

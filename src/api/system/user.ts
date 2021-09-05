@@ -18,3 +18,9 @@ export function info(): Promise<BaseResponse<undefined>> {
     method: "get"
   })
 }
+export function logout(): Promise<BaseResponse<undefined>> {
+  return request({
+    url: "/system/user/logout",
+    method: "get"
+  })
+}

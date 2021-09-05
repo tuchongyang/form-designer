@@ -25,6 +25,9 @@ export default defineComponent({
     watch(model, (val)=>{
       context.emit('update:modelValue',val)
     })
+    watch(()=>props.modelValue,function(val){
+      model.value = props.modelValue
+    })
     return {model}
   }
 })

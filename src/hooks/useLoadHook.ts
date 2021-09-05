@@ -16,7 +16,8 @@ export function useLoadHook<T>(opt: LoadParamsType<T>) {
   const list: Ref<Array<T>> = ref([])
   const listQuery = ref({
     page: 1,
-    pageSize: 20
+    pageSize: 20,
+    ...opt.params
   })
 
   const loadData = () => {

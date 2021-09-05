@@ -1,7 +1,7 @@
 <template>
   <div class="panel-center" @click="centerClick" :style="detail?.content?.skin?.containerStyle">
     <div class="wrapper">
-      <div class="head" :style="detail?.content?.skin?.headerStyle" @click.stop="setHeader">
+      <div class="head" :style="detail?.content?.skin?.headerStyle">
         <div class="title">{{ detail.title }}</div>
         <div class="desc">{{ detail.desc }}</div>
       </div>
@@ -15,7 +15,7 @@
               </div>
               <div class="det">
                 <div class="component">
-                  <component :is="componentMap[item.type]" :data="item" />
+                  <FormItem :data="item" v-model="form[item.id]" />
                 </div>
               </div>
             </div>
@@ -35,11 +35,10 @@ import { defineComponent, ref, computed } from "vue"
 // import * as Utils from "@/utils"
 import { useStore, Store } from "vuex"
 import ItemControl from "./ItemControl.vue"
-import ItemInput from "./ItemInput.vue"
-import ItemRadio from "./ItemRadio.vue"
-import ItemCheckbox from "./ItemCheckbox.vue"
-import ItemSelect from "./ItemSelect.vue"
 import { GlobalDataProps } from "@/store"
+import {ModuleType} from '@/store/form'
+import FormItem from '@/components/FormItem/index.vue'
+import {SaveParams} from '@/api/form/answer'
 const PropsType = {
   content: {
     type: Object,
@@ -55,31 +54,23 @@ const PropsType = {
   }
 }
 export default defineComponent({
-  components: { ItemInput, ItemRadio, ItemCheckbox, ItemSelect, ItemControl },
+  components: { FormItem, ItemControl },
   props: PropsType,
   setup(props) {
     const store: Store<GlobalDataProps> = useStore()
     const modules = computed(() => store.getters.getModuleList)
-    const componentMap = ref({
-      input: "item-input",
-      radio: "item-radio",
-      checkbox: "item-checkbox",
-      select: "item-select"
+    const form = computed(()=>{
+      var form1: SaveParams = {}
+      store.getters.getModuleList.map((a: ModuleType)=>{
+        form1[a.id] = a.defaultValue || ""
+      })
+      console.log('form1',form1)
+      return form1
     })
-    const currentHeader = computed(() => store.getters.getCurrentHeader)
-    const centerClick = () => {
-      store.commit("setHeader", null)
-      store.commit("setCurrent", "")
-    }
-    const setHeader = () => {
-      store.commit("setHeader", props.content.header)
-    }
+    
     return {
       modules,
-      componentMap,
-      currentHeader,
-      centerClick,
-      setHeader
+      form
     }
   }
 })

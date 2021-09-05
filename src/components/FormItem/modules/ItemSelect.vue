@@ -3,28 +3,40 @@
 </template>
 <script lang="ts">
 // import { SelectTypes } from "ant-design-vue/es/select"
-import { defineComponent, ref, PropType } from "vue"
+import { defineComponent, ref, PropType,watch,computed } from "vue"
 import { ModuleType } from "@/store/form"
 
 interface Value {
   value?: string
   label?: string
 }
-
-export default defineComponent({
-  name: "ItemSelect",
-  props: {
+const Prop =  {
     data: {
       type: Object as PropType<ModuleType>,
       default() {
         return {}
       }
+    },
+    modelValue:{
+      type: String,
+      default: ""
     }
-  },
-  setup() {
+  }
+
+export default defineComponent({
+  name: "ItemSelect",
+  props: Prop,
+  setup(props,context) {
     const handleChange = (value: Value) => {
       value.label = value.value
     }
+    const model = ref("")
+    watch(model, (val)=>{
+      context.emit('update:modelValue',val)
+    })
+    watch(()=>props.modelValue,function(val){
+      model.value = props.modelValue
+    })
     return {
       value: ref<Value>({ value: "lucy" }),
       handleChange

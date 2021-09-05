@@ -4,26 +4,60 @@
       <ul>
         <li v-if="!user.id"><router-link to="/login">登录</router-link></li>
         <li v-else>
-          <router-link to="/">{{ user.name || user.email }}</router-link>
+          <a-dropdown :trigger="['click']">
+            <a class="ant-dropdown-link" @click.prevent>
+              <span class="user-info">
+                <img src="../../assets/images/avatar.png" />
+                <span class="name">{{ user.name || user.email }}</span>
+                <DownOutlined class="icon" />
+              </span>
+            </a>
+            <template #overlay>
+              <a-menu @click="onClick">
+                <a-menu-item key="0">
+                  <router-link to="/">我的表单</router-link>
+                </a-menu-item>
+                <a-menu-divider />
+                <a-menu-item key="3">退出登录</a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </li>
       </ul>
     </div>
     <div class="logo">
-      <img src="../../assets/images/logo.png" />
+      <img src="../../assets/images/logo.svg" />
     </div>
     <div class="title">表单设计器</div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue"
+import { defineComponent, computed, VNodeChild } from "vue"
 import { useStore } from "vuex"
-
+import { useRouter } from "vue-router"
+import { DownOutlined } from "@ant-design/icons-vue"
+interface MenuInfo {
+  key: string
+  keyPath: string[]
+  item: VNodeChild
+  domEvent: MouseEvent
+}
 export default defineComponent({
   name: "HeaderBar",
+  components: { DownOutlined },
   setup() {
     const store = useStore()
+    const router = useRouter()
     const user = computed(() => store.state.user.user)
-    return { user }
+    const onClick = ({ key }: MenuInfo) => {
+      console.log(`Click on item ${key}`)
+      if (key == "3") {
+        store.dispatch("logout").then(() => {
+          router.push("/login")
+        })
+      }
+    }
+    return { user, onClick }
   }
 })
 </script>
@@ -41,8 +75,9 @@ export default defineComponent({
     display: inline-block;
     line-height: 1;
     vertical-align: middle;
+    padding: 5px;
     img {
-      height: 36px;
+      height: 25px;
       vertical-align: top;
     }
   }
@@ -60,6 +95,20 @@ export default defineComponent({
         padding: 15px 10px;
         list-style: none;
       }
+    }
+  }
+  .user-info {
+    display: inline-block;
+    img {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    .icon {
+      margin-left: 10px;
+      color: #aaa;
     }
   }
 }
