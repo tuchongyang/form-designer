@@ -38,7 +38,7 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  const whiteList = ["/show"]
+  const whiteList = ["/show", "/login"]
   if (whiteList.indexOf(to.path) > -1) {
     next()
   } else {
