@@ -30,14 +30,12 @@
 <script lang="ts">
 import { defineComponent, ref, Ref, computed } from "vue"
 // import * as Utils from "@/utils"
-import { useStore, Store } from "vuex"
-import { GlobalDataProps } from "@/store"
 import api from "@/api"
-import {SaveParams} from '@/api/form/answer'
+import { SaveParams } from "@/api/form/answer"
 import { useRoute } from "vue-router"
 import { FormDetailType, ContentType } from "@/store/form"
 import { message } from "ant-design-vue"
-import FormItem from '@/components/FormItem/index.vue'
+import FormItem from "@/components/FormItem/index.vue"
 
 export default defineComponent({
   components: { FormItem },
@@ -49,7 +47,6 @@ export default defineComponent({
   },
   setup(props) {
     const route = useRoute()
-    const store: Store<GlobalDataProps> = useStore()
     const detail: Ref<FormDetailType | null> = ref(null)
     const modules = computed(() => detail.value?.content?.modules || [])
     const form: Ref<SaveParams> = ref({})
@@ -94,8 +91,8 @@ export default defineComponent({
         return
       }
       console.log("form", form.value)
-      if(detail.value?.id){
-        api.form.answer.save(detail.value?.id, form.value).then(()=>{
+      if (detail.value?.id) {
+        api.form.answer.save(detail.value?.id, form.value).then(() => {
           message.success("提交成功")
         })
       }

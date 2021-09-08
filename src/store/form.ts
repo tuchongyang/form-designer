@@ -32,11 +32,6 @@ interface StyleType {
   [key: string]: string | number
 }
 
-interface HeaderType {
-  title?: string
-  desc?: string
-  style?: string
-}
 export interface FormProps {
   currentModuleId: string
   form: FormDetailType

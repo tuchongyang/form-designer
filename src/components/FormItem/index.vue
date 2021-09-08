@@ -1,8 +1,8 @@
 <template>
-    <component :is="componentMap[data.type]" :data="data" v-model="model" />
+  <component :is="componentMap[data.type]" :data="data" v-model="model" />
 </template>
 <script lang="ts">
-import { defineComponent,PropType,ref,watch } from 'vue'
+import { defineComponent, PropType, ref, watch } from "vue"
 import { ModuleType } from "@/store/form"
 
 import ItemInput from "./modules/ItemInput.vue"
@@ -16,30 +16,33 @@ const Props = {
       return {}
     }
   },
-  modelValue:{
+  modelValue: {
     type: String,
     default: ""
   }
 }
 export default defineComponent({
-    name:"FormItem",
-    components:{ItemInput,ItemRadio,ItemCheckbox,ItemSelect},
-    props: Props,
-    setup(props,context) {
-        const componentMap = ref({
-            input: "item-input",
-            radio: "item-radio",
-            checkbox: "item-checkbox",
-            select: "item-select"
-        })
-        const model = ref(props.modelValue)
-        watch(model,function(val){
-            context.emit('update:modelValue',val)
-        })
-        watch(()=>props.modelValue,function(val){
-            model.value = props.modelValue
-        })
-        return {componentMap, model}
-    },
+  name: "FormItem",
+  components: { ItemInput, ItemRadio, ItemCheckbox, ItemSelect },
+  props: Props,
+  setup(props, context) {
+    const componentMap = ref({
+      input: "item-input",
+      radio: "item-radio",
+      checkbox: "item-checkbox",
+      select: "item-select"
+    })
+    const model = ref(props.modelValue)
+    watch(model, function (val) {
+      context.emit("update:modelValue", val)
+    })
+    watch(
+      () => props.modelValue,
+      function (val) {
+        model.value = props.modelValue
+      }
+    )
+    return { componentMap, model }
+  }
 })
 </script>

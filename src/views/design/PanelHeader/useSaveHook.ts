@@ -1,4 +1,4 @@
-import { ref } from "vue"
+import { ref, Ref } from "vue"
 import { FormDetailType } from "@/store/form"
 import * as Utils from "@/utils"
 import api from "@/api"
@@ -7,7 +7,14 @@ import { message } from "ant-design-vue"
 interface SavePrams {
   detail: FormDetailType
 }
-export function useSaveHook(saveParams: SavePrams) {
+interface ReturnType {
+  loading: boolean
+  previewRef: Ref<any>
+  save: () => void
+  publish: () => void
+  preview: () => void
+}
+export function useSaveHook(saveParams: SavePrams): ReturnType {
   const loading = ref(false)
   const save = () => {
     const detail = saveParams.detail
@@ -30,7 +37,6 @@ export function useSaveHook(saveParams: SavePrams) {
       .finally(() => {
         loading.value = false
       })
-    return detail
   }
 
   const publish = () => {

@@ -1,6 +1,4 @@
 import request, { BaseResponse, ListPageType } from "@/api/request"
-import { ContentType } from "@/store/form"
-
 export interface AnswerListItem {
   id: number
   title: string
@@ -20,7 +18,7 @@ export interface SaveParams {
 //保存
 export function save(formId: number, opt: SaveParams): Promise<BaseResponse<undefined>> {
   return request<undefined>({
-    url: "/form/answer/save/"+formId,
+    url: "/form/answer/save/" + formId,
     method: "post",
     data: opt
   })

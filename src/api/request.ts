@@ -1,5 +1,4 @@
 import { AxiosRequestConfig } from "axios"
-import { message } from "ant-design-vue"
 import service from "./axios"
 
 export interface BaseResponse<T> {
@@ -20,7 +19,6 @@ const request = <T>(config: AxiosRequestConfig): Promise<BaseResponse<T>> => {
         resolve(res.data)
       },
       (err) => {
-        
         reject(err)
       }
     )

@@ -1,4 +1,4 @@
-import { h, watch, render, createVNode } from "vue"
+import { render, createVNode } from "vue"
 import Main from "./main.vue"
 import type { ComponentPublicInstance } from "vue"
 
@@ -15,7 +15,10 @@ const getContainer = () => {
 const options = {
   msg: "hello"
 }
-const ModalDialog = () => {
+interface ReturnType {
+  close: () => void
+}
+const ModalDialog = (): ReturnType => {
   const container = getContainer()
   const vm = createVNode(Main, options)
   if (vm.props) {

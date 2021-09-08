@@ -4,7 +4,7 @@
   </a-checkbox-group>
 </template>
 <script lang="ts">
-import { defineComponent, ref,watch, reactive, PropType } from "vue"
+import { defineComponent, ref, watch, reactive, PropType } from "vue"
 
 import { ModuleType } from "@/store/form"
 const PropsType = {
@@ -14,7 +14,7 @@ const PropsType = {
       return {}
     }
   },
-  modelValue:{
+  modelValue: {
     type: Array as PropType<Array<string>>,
     default: []
   }
@@ -22,7 +22,7 @@ const PropsType = {
 export default defineComponent({
   name: "ItemInput",
   props: PropsType,
-  setup(props,context) {
+  setup(props, context) {
     const value = ref<Array<number>>([])
     const radioStyle = reactive({
       display: "block",
@@ -31,12 +31,15 @@ export default defineComponent({
       marginLeft: 0
     })
     const model = ref(props.modelValue)
-    watch(model, (val)=>{
-      context.emit('update:modelValue',val)
+    watch(model, (val) => {
+      context.emit("update:modelValue", val)
     })
-    watch(()=>props.modelValue,function(val){
-      model.value = props.modelValue
-    })
+    watch(
+      () => props.modelValue,
+      function (val) {
+        model.value = val
+      }
+    )
     return {
       value,
       radioStyle,

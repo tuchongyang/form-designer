@@ -10,7 +10,14 @@ interface LoadParamsType<T> {
     [key: string]: any
   }
 }
-export function useLoadHook<T>(opt: LoadParamsType<T>) {
+interface ReturnType<T> {
+  total: number
+  list: Ref<Array<T>>
+  listQuery: ListQuery
+  loading: boolean
+  loadData: () => void
+}
+export function useLoadHook<T>(opt: LoadParamsType<T>): ReturnType<T> {
   const loading = ref(false)
   const total = ref(0)
   const list: Ref<Array<T>> = ref([])

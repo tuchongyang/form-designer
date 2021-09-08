@@ -1,5 +1,4 @@
 import request, { BaseResponse, ListPageType } from "@/api/request"
-import { ContentType } from "@/store/form"
 
 export interface FormListItem {
   id: number
@@ -34,7 +33,7 @@ export interface UpdateParams {
 export function update(opt: UpdateParams): Promise<BaseResponse<undefined>> {
   const { id, ...params } = opt
   return request<undefined>({
-    url: "/form/update/" + opt.id,
+    url: "/form/update/" + id,
     method: "post",
     data: params
   })
@@ -73,5 +72,5 @@ export function publish(id: number): Promise<BaseResponse<undefined>> {
   })
 }
 
-import answer from './answer'
-export default { save, list, update, remove, detail, publish,answer }
+import answer from "./answer"
+export default { save, list, update, remove, detail, publish, answer }

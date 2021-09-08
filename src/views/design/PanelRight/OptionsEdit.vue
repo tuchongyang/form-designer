@@ -41,7 +41,7 @@ export default defineComponent({
       // const moduleData = props.data as ModuleType
       let defaultValue: string | string[] | undefined = props.data.defaultValue
       const value = data.value as string
-      const index = defaultValue? defaultValue.indexOf(value) : -1
+      const index = defaultValue ? defaultValue.indexOf(value) : -1
       if (index > -1) {
         if (defaultValue instanceof Array) {
           defaultValue.splice(index, 1)
@@ -55,7 +55,7 @@ export default defineComponent({
           defaultValue = value
         }
       }
-      console.log("defaultValue", defaultValue,'===',value)
+      console.log("defaultValue", defaultValue, "===", value)
       store.commit("moduleUpdate", { id: props.data.id, key: "defaultValue", value: defaultValue })
     }
     const checkStyle = (data: LabeledValue) => {

@@ -4,7 +4,7 @@
   </a-radio-group>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive,watch, PropType, computed } from "vue"
+import { defineComponent, ref, reactive, watch, PropType, computed } from "vue"
 
 import { ModuleType } from "@/store/form"
 const PropsType = {
@@ -14,7 +14,7 @@ const PropsType = {
       return {}
     }
   },
-  modelValue:{
+  modelValue: {
     type: String,
     default: ""
   }
@@ -22,7 +22,7 @@ const PropsType = {
 export default defineComponent({
   name: "ItemInput",
   props: PropsType,
-  setup(props,context) {
+  setup(props, context) {
     const value = ref<number>(1)
     const radioStyle = reactive({
       display: "block",
@@ -31,12 +31,15 @@ export default defineComponent({
     })
     const defaultValue = computed(() => props.data.defaultValue)
     const model = ref("")
-    watch(model, (val)=>{
-      context.emit('update:modelValue',val)
+    watch(model, (val) => {
+      context.emit("update:modelValue", val)
     })
-    watch(()=>props.modelValue,function(val){
-      model.value = props.modelValue
-    })
+    watch(
+      () => props.modelValue,
+      function (val) {
+        model.value = val
+      }
+    )
     return {
       model,
       value,

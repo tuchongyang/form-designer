@@ -2,7 +2,7 @@
   <a-input v-model:value="model" :placeholder="data.placeholder" />
 </template>
 <script lang="ts">
-import { defineComponent, PropType,ref,watch } from "vue"
+import { defineComponent, PropType, ref, watch } from "vue"
 
 import { ModuleType } from "@/store/form"
 const Props = {
@@ -12,7 +12,7 @@ const Props = {
       return {}
     }
   },
-  modelValue:{
+  modelValue: {
     type: String,
     default: ""
   }
@@ -20,15 +20,18 @@ const Props = {
 export default defineComponent({
   name: "ItemInput",
   props: Props,
-  setup(props,context) {
+  setup(props, context) {
     const model = ref("")
-    watch(model, (val)=>{
-      context.emit('update:modelValue',val)
+    watch(model, (val) => {
+      context.emit("update:modelValue", val)
     })
-    watch(()=>props.modelValue,function(val){
-      model.value = props.modelValue
-    })
-    return {model}
+    watch(
+      () => props.modelValue,
+      function (val) {
+        model.value = val
+      }
+    )
+    return { model }
   }
 })
 </script>

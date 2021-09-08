@@ -3,8 +3,13 @@ import { useRoute } from "vue-router"
 import api from "@/api"
 import { FormDetailType, ContentType } from "@/store/form"
 import store from "@/store"
-export function useDetailHook() {
-  const detail: Ref<FormDetailType | {}> = ref({})
+interface ReturnType {
+  detail: Ref<FormDetailType | null>
+}
+export function useDetailHook(): ReturnType {
+  // const contentObj: ContentType = { skin: { containerStyle: {}, headerStyle: {} }, modules: [] }
+  // const detailObj: FormDetailType = { id: 0, title: "", desc: "", content: contentObj, cover: "" }
+  const detail: Ref<FormDetailType | null> = ref(null)
   const route = useRoute()
   const id = route.query.id || 0
   if (id) {

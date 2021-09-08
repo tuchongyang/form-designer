@@ -36,9 +36,9 @@ import { defineComponent, ref, computed } from "vue"
 import { useStore, Store } from "vuex"
 import ItemControl from "./ItemControl.vue"
 import { GlobalDataProps } from "@/store"
-import {ModuleType} from '@/store/form'
-import FormItem from '@/components/FormItem/index.vue'
-import {SaveParams} from '@/api/form/answer'
+import { ModuleType } from "@/store/form"
+import FormItem from "@/components/FormItem/index.vue"
+import { SaveParams } from "@/api/form/answer"
 const PropsType = {
   content: {
     type: Object,
@@ -56,18 +56,17 @@ const PropsType = {
 export default defineComponent({
   components: { FormItem, ItemControl },
   props: PropsType,
-  setup(props) {
+  setup() {
     const store: Store<GlobalDataProps> = useStore()
     const modules = computed(() => store.getters.getModuleList)
-    const form = computed(()=>{
+    const form = computed(() => {
       var form1: SaveParams = {}
-      store.getters.getModuleList.map((a: ModuleType)=>{
+      store.getters.getModuleList.map((a: ModuleType) => {
         form1[a.id] = a.defaultValue || ""
       })
-      console.log('form1',form1)
       return form1
     })
-    
+
     return {
       modules,
       form

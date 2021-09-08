@@ -37,8 +37,7 @@ export const useLoginHook = (): UseLoginHook => {
   const loading = ref(false)
 
   const onSubmit = (): void => {
-    formRef.value.validate()
-    .then(() => {
+    formRef.value.validate().then(() => {
       api.system.user.login(form.value).then((res) => {
         message.success("登录成功")
         localStorage.setItem("token", res.result)
@@ -46,8 +45,7 @@ export const useLoginHook = (): UseLoginHook => {
           router.push("/")
         })
       })
-    }).catch(()=>{})
-    
+    })
   }
   return {
     form,

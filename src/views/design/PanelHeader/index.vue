@@ -28,7 +28,7 @@
   <Preview ref="previewRef" />
 </template>
 <script lang="ts">
-import { defineComponent, ref, PropType, watch } from "vue"
+import { defineComponent, PropType, watch } from "vue"
 import { SendOutlined } from "@ant-design/icons-vue"
 import { useSaveHook } from "./useSaveHook"
 import { FormDetailType } from "@/store/form"

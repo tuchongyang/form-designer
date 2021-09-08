@@ -2,7 +2,7 @@
   <div class="container">
     <HeaderBar />
     <div class="sub-header">
-      <div class="title">{{detail?.title}}</div>
+      <div class="title">{{ detail?.title }}</div>
       <ul class="tabs">
         <li class="active">列表视图</li>
         <!-- <li>统计视图</li> -->
@@ -18,19 +18,16 @@
 <script lang="ts">
 import { defineComponent, ref, Ref, computed } from "vue"
 // import * as Utils from "@/utils"
-import { useStore, Store } from "vuex"
-import { GlobalDataProps } from "@/store"
 import api from "@/api"
-import {SaveParams} from '@/api/form/answer'
+import { SaveParams } from "@/api/form/answer"
 import { useRoute } from "vue-router"
 import { FormDetailType, ContentType } from "@/store/form"
 import { message } from "ant-design-vue"
-import FormItem from '@/components/FormItem/index.vue'
-import HeaderBar from '@/components/HeaderBar/index.vue'
-import ListView from './ListView.vue'
+import HeaderBar from "@/components/HeaderBar/index.vue"
+import ListView from "./ListView.vue"
 
 export default defineComponent({
-  components: { FormItem,HeaderBar,ListView },
+  components: { HeaderBar, ListView },
   props: {
     mode: {
       type: String,
@@ -39,7 +36,6 @@ export default defineComponent({
   },
   setup(props) {
     const route = useRoute()
-    const store: Store<GlobalDataProps> = useStore()
     const detail: Ref<FormDetailType | null> = ref(null)
     const modules = computed(() => detail.value?.content?.modules || [])
     const form: Ref<SaveParams> = ref({})
@@ -84,8 +80,8 @@ export default defineComponent({
         return
       }
       console.log("form", form.value)
-      if(detail.value?.id){
-        api.form.answer.save(detail.value?.id, form.value).then(()=>{
+      if (detail.value?.id) {
+        api.form.answer.save(detail.value?.id, form.value).then(() => {
           message.success("提交成功")
         })
       }
@@ -103,30 +99,30 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.container{
+.container {
   min-height: 100vh;
   background: #f1f5f1;
-  .sub-header{
+  .sub-header {
     padding: 0 20px;
     line-height: 40px;
     background: #fff;
     border-top: 1px solid #eee;
     position: relative;
-    .tabs{
+    .tabs {
       position: absolute;
-      left:50%;
+      left: 50%;
       transform: translateX(-50%);
-      top:0;
-      li{
-        height:40px;
+      top: 0;
+      li {
+        height: 40px;
         line-height: 40px;
         float: left;
         list-style: none;
         padding: 0 20px;
         cursor: pointer;
-        &.active{
+        &.active {
           background: #f1f5f1;
-          color:#ff9600;
+          color: #ff9600;
         }
       }
     }
