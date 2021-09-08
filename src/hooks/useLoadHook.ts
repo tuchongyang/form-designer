@@ -11,10 +11,10 @@ interface LoadParamsType<T> {
   }
 }
 interface ReturnType<T> {
-  total: number
+  total: Ref<number>
   list: Ref<Array<T>>
-  listQuery: ListQuery
-  loading: boolean
+  listQuery: Ref<ListQuery>
+  loading: Ref<boolean>
   loadData: () => void
 }
 export function useLoadHook<T>(opt: LoadParamsType<T>): ReturnType<T> {

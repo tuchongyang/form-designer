@@ -8,7 +8,7 @@ interface SavePrams {
   detail: FormDetailType
 }
 interface ReturnType {
-  loading: boolean
+  loading: Ref<boolean>
   previewRef: Ref<any>
   save: () => void
   publish: () => void
